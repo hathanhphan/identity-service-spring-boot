@@ -1,14 +1,26 @@
 package com.something.identity_service.dto.request;
 
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 
-@Getter
-@Setter
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserUpdateRequest {
-    private String firstName;
-    private String lastName;
-    private LocalDate dateOfBirth;
+    @NotBlank(message = "First name is required")
+    String firstName;
+
+    @NotBlank(message = "Last name is required")
+    String lastName;
+
+    @Past(message = "Date of birth must be in the past")
+    @NotNull(message = "Date of birth is required")
+    LocalDate dateOfBirth;
 }
