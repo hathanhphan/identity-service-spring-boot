@@ -4,13 +4,15 @@ import com.something.identity_service.dto.request.UserCreationRequest;
 import com.something.identity_service.dto.request.UserUpdateRequest;
 import com.something.identity_service.dto.response.ApiResponse;
 import com.something.identity_service.dto.response.UserResponse;
-import com.something.identity_service.entity.User;
 import com.something.identity_service.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +30,7 @@ public class UserController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<List<UserResponse>>> getAll() {
         return ResponseEntity.ok(ApiResponse.success(userService.findAll()));
     }
@@ -46,5 +49,10 @@ public class UserController {
     public ResponseEntity<ApiResponse<Void>> delete(@PathVariable String id) {
         userService.deleteById(id);
         return ResponseEntity.ok(ApiResponse.success("User deleted successfully"));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse<UserResponse>> getMyInfo() {
+        return ResponseEntity.ok(ApiResponse.success(userService.getMyInfo()));
     }
 }

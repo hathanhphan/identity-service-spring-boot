@@ -16,4 +16,6 @@ public interface UserService {
     UserResponse update(String id, UserUpdateRequest request);
 
     void deleteById(String id);
+
+    UserResponse getMyInfo();
 }
