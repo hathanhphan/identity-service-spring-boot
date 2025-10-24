@@ -1,13 +1,13 @@
 package com.something.identity_service.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @Data
@@ -24,4 +24,8 @@ public class User {
     String firstName;
     String lastName;
     LocalDate dateOfBirth;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "json")
+    Set<String> roles;
 }
