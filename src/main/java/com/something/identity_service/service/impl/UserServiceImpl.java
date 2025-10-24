@@ -17,6 +17,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User create(UserCreationRequest request) {
+        if (userRepository.existsByUsername(request.getUsername())) {
+            throw new RuntimeException("Username already exists");
+        }
         User user = new User();
         user.setUsername(request.getUsername());
         user.setPassword(request.getPassword());
