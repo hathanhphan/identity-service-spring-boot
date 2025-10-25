@@ -25,7 +25,6 @@ public class User {
     String lastName;
     LocalDate dateOfBirth;
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(columnDefinition = "json")
-    Set<String> roles;
+    @ManyToMany
+    Set<Role> roles;
 }

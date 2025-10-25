@@ -91,7 +91,7 @@ public class AuthServiceImpl implements AuthService {
     private String buildScope(User user) {
         StringJoiner stringJoiner = new StringJoiner(" ");
         if (!user.getRoles().isEmpty()) {
-            user.getRoles().forEach(stringJoiner::add);
+            //user.getRoles().forEach(stringJoiner::add);
         }
         return stringJoiner.toString();
     }
