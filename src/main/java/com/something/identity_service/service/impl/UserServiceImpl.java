@@ -1,11 +1,13 @@
 package com.something.identity_service.service.impl;
 
+import com.something.identity_service.dto.request.RoleAssignRequest;
 import com.something.identity_service.dto.request.UserCreationRequest;
 import com.something.identity_service.dto.request.UserUpdateRequest;
 import com.something.identity_service.dto.response.UserResponse;
+import com.something.identity_service.entity.Role;
 import com.something.identity_service.entity.User;
-import com.something.identity_service.enums.Role;
 import com.something.identity_service.mapper.UserMapper;
+import com.something.identity_service.repository.RoleRepository;
 import com.something.identity_service.repository.UserRepository;
 import com.something.identity_service.service.UserService;
 import lombok.AccessLevel;
@@ -14,7 +16,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserServiceImpl implements UserService {
     UserRepository userRepository;
+    RoleRepository roleRepository;
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
 
@@ -37,9 +39,6 @@ public class UserServiceImpl implements UserService {
         }
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        HashSet<String> roles = new HashSet<>();
-        roles.add(Role.USER.name());
-        //user.setRoles(roles);
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
@@ -72,5 +71,13 @@ public class UserServiceImpl implements UserService {
         log.info("Username is {}", name);
         User user = userRepository.findByUsername(name).orElseThrow(() -> new RuntimeException("User not found"));
         return userMapper.toUserResponse(user);
+    }
+
+    @Override
+    public UserResponse assignRole(RoleAssignRequest request) {
+        User user = userRepository.findById(request.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
+        List<Role> roles = roleRepository.findAllById(request.getRoles());
+        user.setRoles(new HashSet<>(roles));
+        return userMapper.toUserResponse(userRepository.save(user));
     }
 }
