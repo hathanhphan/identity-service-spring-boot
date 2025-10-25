@@ -1,5 +1,6 @@
 package com.something.identity_service.dto.request;
 
+import com.something.identity_service.validator.DobConstraint;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
@@ -22,5 +23,6 @@ public class UserUpdateRequest {
 
     @Past(message = "Date of birth must be in the past")
     @NotNull(message = "Date of birth is required")
+    @DobConstraint(min = 18)
     LocalDate dateOfBirth;
 }
