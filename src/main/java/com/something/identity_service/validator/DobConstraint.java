@@ -2,7 +2,6 @@ package com.something.identity_service.validator;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-import org.springframework.context.annotation.Configuration;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
